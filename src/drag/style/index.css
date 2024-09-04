@@ -1,0 +1,40 @@
+/*connections*/
+.connections {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+.connections .arrow {
+  stroke: #b1b1b7;
+  fill: #b1b1b7;
+}
+
+.connections .circle {
+  stroke: #b1b1b7;
+  fill: #b1b1b7;
+}
+
+.connections .path-incoming {
+  stroke-dasharray: 1 15;
+  -webkit-animation: dashdraw 1s linear infinite;
+  animation: dashdraw 1s linear infinite;
+  stroke: #b1b1b7;
+  stroke-width: 8;
+  fill: transparent;
+  stroke-linecap: round;
+  /* transition:; */
+}
+
+.connections .path-background {
+  stroke: #fff;
+  fill: transparent;
+}
+
+@keyframes dashdraw {
+  0% {
+    stroke-dashoffset: 16;
+  }
+}
