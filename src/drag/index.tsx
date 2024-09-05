@@ -28,8 +28,13 @@ export const Drag = () => {
     invariant(dragContainerRef.current);
     setWidth(dragContainerRef.current.clientWidth);
     setHeight(dragContainerRef.current.clientHeight);
+
+    setTop(0);
+    setLeft(0);
+    setZoomLevel(1);
   }, []);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const selectNone = (evt: any) => {
     if (evt.target.dataset.click === "FLOWS") {
       evt.stopPropagation();

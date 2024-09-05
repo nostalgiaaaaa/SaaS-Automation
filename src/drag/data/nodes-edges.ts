@@ -1,61 +1,80 @@
-import { edgeType } from "../type";
+import { edgeType, NodeData } from "../type";
 
-export const initialNodes = [
+export const initialNodes: NodeData[] = [
   {
     id: "1",
-    type: "input",
+    type: "1",
+    color: "#9ee485",
     data: { label: "input" },
     position: { x: 0, y: 0 },
   },
   {
     id: "2",
+    type: "1",
+    color: "#9ee485",
     data: { label: "node 2" },
     position: { x: 0, y: 0 },
   },
   {
     id: "2a",
+    type: "2",
+    color: "#f080ff",
     data: { label: "node 2a" },
     position: { x: 0, y: 0 },
   },
   {
     id: "2b",
+    type: "3",
+    color: "#8088ff",
     data: { label: "node 2b" },
     position: { x: 0, y: 0 },
   },
   {
     id: "2c",
+    type: "4",
+    color: "#ffca80",
     data: { label: "node 2c" },
     position: { x: 0, y: 0 },
   },
   {
     id: "2d",
+    type: "1",
+    color: "#9ee485",
     data: { label: "node 2d" },
     position: { x: 0, y: 0 },
   },
   {
     id: "3",
+    type: "1",
+    color: "#9ee485",
     data: { label: "node 3" },
     position: { x: 0, y: 0 },
   },
   {
     id: "4",
+    type: "3",
+    color: "#8088ff",
     data: { label: "node 4" },
     position: { x: 0, y: 0 },
   },
   {
     id: "5",
+    type: "2",
+    color: "#f080ff",
     data: { label: "node 5" },
     position: { x: 0, y: 0 },
   },
   {
     id: "6",
-    type: "output",
+    type: "4",
+    color: "#ffca80",
     data: { label: "output" },
     position: { x: 0, y: 0 },
   },
   {
     id: "7",
-    type: "output",
+    type: "1",
+    color: "#9ee485",
     data: { label: "output" },
     position: { x: 0, y: 0 },
   },

@@ -21,6 +21,7 @@ export const Node = ({
 
   useEffect(() => {
     if (draggableRef.current) draggable(draggableRef.current);
+    console.log(moving, press);
   }, []);
 
   const draggable = (element: HTMLDivElement) => {
@@ -70,8 +71,9 @@ export const Node = ({
   const selectedStyle: React.CSSProperties = {
     width: `${NODEWIDTH}px`,
     height: `${NODEHEIGHT}px`,
+    backgroundColor: node.color,
+    outline: `0px solid ${node.color}b0`,
     outlineWidth: dragStore.selectedNode?.id === node.id ? "8px" : "",
-    // outlineColor: dragStore.selectedNode?.id === node.id ? "#f3c07d" : "",
   };
 
   return (

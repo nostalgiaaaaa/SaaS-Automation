@@ -12,6 +12,18 @@ export type NodeEntry = {
 export const NODEWIDTH = 80;
 export const NODEHEIGHT = 80;
 
+export const COLOR: {
+  "1": string;
+  "2": string;
+  "3": string;
+  "4": string;
+} = {
+  "1": "#9ee485",
+  "2": "#f080ff",
+  "3": "#8088ff",
+  "4": "#ffca80",
+} as const;
+
 export type BoardContextValue = {
   nodes: Map<string, DragNode>;
   edges: Map<string, Edge>;

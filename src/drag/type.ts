@@ -5,9 +5,10 @@ export interface Position {
 
 export interface NodeData {
   id: string;
-  type?: string;
-  data: unknown;
+  type: string;
+  color: string;
   position: Position;
+  data: unknown;
 }
 
 export interface DragNode extends NodeData {

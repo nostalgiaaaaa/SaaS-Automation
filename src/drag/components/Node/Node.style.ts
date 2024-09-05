@@ -11,8 +11,6 @@ export const NodeStyle = sva({
     },
     block: {
       borderRadius: "50%",
-      outline: "0px solid #66CC6650",
-      backgroundColor: "#9ee485",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
