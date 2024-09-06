@@ -78,6 +78,13 @@ export const initialNodes: NodeData[] = [
     data: { label: "output" },
     position: { x: 0, y: 0 },
   },
+  {
+    id: "9",
+    type: "1",
+    color: "#ffca80",
+    data: { label: "output" },
+    position: { x: 0, y: 0 },
+  },
 ];
 
 export const initialEdges = [
@@ -90,4 +97,5 @@ export const initialEdges = [
   { id: "e45", source: "4", target: "5", type: edgeType, animated: true },
   { id: "e56", source: "5", target: "6", type: edgeType, animated: true },
   { id: "e57", source: "5", target: "7", type: edgeType, animated: true },
+  { id: "e39", source: "3", target: "9", type: edgeType, animated: true },
 ];

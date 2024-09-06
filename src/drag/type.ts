@@ -1,3 +1,5 @@
+import { ElkNode } from "elkjs";
+
 export interface Position {
   x: number;
   y: number;
@@ -11,7 +13,7 @@ export interface NodeData {
   data: unknown;
 }
 
-export interface DragNode extends NodeData {
+export interface DragNode extends NodeData, ElkNode {
   targetPosition: string;
   sourcePosition: string;
 }

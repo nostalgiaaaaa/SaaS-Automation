@@ -1,15 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 import { DragNode } from "../../type";
-import { NODEHEIGHT, NODEWIDTH, useDragStore } from "../../store/drag";
+import {
+  HANDLEWIDTH,
+  NODEHEIGHT,
+  NODEWIDTH,
+  OUTLINEWIDHT,
+  useDragStore,
+} from "../../store/drag";
 // import { css } from "@styled-system/css";
 import { NodeStyle } from "./Node.style";
+import { getDesignerIcon } from "@/drag/data/KaravanIcons";
+import { SvgIcon } from "../SvgIcon";
 
 export const Node = ({
-  node,
   dragContainerRef,
+  node,
+  hasChild,
+  direction,
 }: {
-  node: DragNode;
   dragContainerRef: HTMLDivElement | null;
+  node: DragNode;
+  hasChild: boolean;
+  direction: string;
 }) => {
   const draggableRef = useRef<HTMLDivElement | null>(null);
   const dragStore = useDragStore();
@@ -21,7 +33,6 @@ export const Node = ({
 
   useEffect(() => {
     if (draggableRef.current) draggable(draggableRef.current);
-    console.log(moving, press);
   }, []);
 
   const draggable = (element: HTMLDivElement) => {
@@ -60,26 +71,55 @@ export const Node = ({
       dragContainerRef.removeEventListener("mousemove", move, false);
     setMoving(false);
     setPress(false);
+    console.log(moving);
+    console.log(press);
   };
 
   const style = NodeStyle();
 
-  const positionStyle: React.CSSProperties = {
+  const rootStyle: React.CSSProperties = {
     top: `${node.position.y}px`,
     left: `${node.position.x}px`,
   };
-  const selectedStyle: React.CSSProperties = {
+
+  const nodeStyle: React.CSSProperties = {
+    padding: `${OUTLINEWIDHT}px`,
+  };
+
+  const itemStyle: React.CSSProperties = {
     width: `${NODEWIDTH}px`,
     height: `${NODEHEIGHT}px`,
     backgroundColor: node.color,
-    outline: `0px solid ${node.color}b0`,
-    outlineWidth: dragStore.selectedNode?.id === node.id ? "8px" : "",
+    outline: `0px solid ${node.color}B3`,
+    outlineWidth:
+      dragStore.selectedNode?.id === node.id ? `${OUTLINEWIDHT}px` : "",
+  };
+
+  const handleStyle: React.CSSProperties = {
+    width: `${HANDLEWIDTH}px`,
+    height: `${HANDLEWIDTH}px`,
+    backgroundColor: `${node.color}`,
+    bottom: direction === "RIGHT" ? `calc(50% - ${HANDLEWIDTH / 2}px)` : "-18%",
+    right: direction === "RIGHT" ? "-18%" : `calc(50% - ${HANDLEWIDTH / 2}px)`,
   };
 
   return (
-    <div ref={draggableRef} className={style.root} style={positionStyle}>
-      <div className={style.block} style={selectedStyle}>
-        <div className={style.content}>{node.id}</div>
+    <div className={style.root} style={rootStyle}>
+      {!hasChild && (
+        <div
+          className={
+            direction === "RIGHT" ? style.handleRight : style.handleBottom
+          }
+          style={handleStyle}
+        >
+          <SvgIcon name="plus" size={10} fill={"#fff"} />
+        </div>
+      )}
+
+      <div className={style.node} style={nodeStyle}>
+        <div ref={draggableRef} className={style.item} style={itemStyle}>
+          <div className={style.content}> {getDesignerIcon("rest")}</div>
+        </div>
       </div>
     </div>
   );

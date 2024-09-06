@@ -7,19 +7,19 @@
   pointer-events: none;
 }
 
-.connections .arrow {
-  stroke: #b1b1b7;
-  fill: #b1b1b7;
-}
-
 .connections .path-incoming {
   stroke-dasharray: 1 15;
   -webkit-animation: dashdraw 1s linear infinite;
   animation: dashdraw 1s linear infinite;
   stroke-width: 8;
-  fill: transparent;
+  fill: none;
   stroke-linecap: round;
-  /* transition:; */
+  pointer-events: stroke;
+  opacity: 0.7;
+}
+
+.connections .path-incoming:hover {
+  opacity: 1;
 }
 
 @keyframes dashdraw {

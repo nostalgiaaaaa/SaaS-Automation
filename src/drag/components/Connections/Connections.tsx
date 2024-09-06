@@ -1,5 +1,11 @@
-import { NODEHEIGHT, NODEWIDTH } from "@/drag/store/drag";
+import {
+  HANDLEWIDTH,
+  NODEHEIGHT,
+  NODEWIDTH,
+  OUTLINEWIDHT,
+} from "@/drag/store/drag";
 import { DragNode, Edge } from "@/drag/type";
+import "./index.css";
 
 export const Connections = ({
   nodes,
@@ -20,8 +26,8 @@ export const Connections = ({
   left: number;
   direction: string;
 }) => {
-  const centerX = (NODEWIDTH + 16) / 2;
-  const centerY = (NODEHEIGHT + 16) / 2;
+  const centerX = (NODEWIDTH + OUTLINEWIDHT * 2) / 2;
+  const centerY = (NODEHEIGHT + OUTLINEWIDHT * 2) / 2;
   const getStartX = (sourceNode: DragNode) => {
     return (sourceNode.position.x + centerX - left) / zoomLevel;
   };
@@ -39,10 +45,10 @@ export const Connections = ({
   };
 
   const getPathD = (sourceNode: DragNode, targetNode: DragNode) => {
-    if (direction === "LR") {
-      return `M ${getStartX(sourceNode)},${getStartY(sourceNode)} L ${getEndX(targetNode)}.0001,${getEndY(targetNode)}.0001`;
+    if (direction === "RIGHT") {
+      return `M ${getStartX(sourceNode)},${getStartY(sourceNode)} L ${Math.round(getEndX(targetNode))}.0001,${Math.round(getEndY(targetNode))}.0001`;
     } else {
-      return `M ${getStartX(sourceNode)},${getStartY(sourceNode)} L ${getEndX(targetNode)}.0001,${getEndY(targetNode)}.0001`;
+      return `M ${getStartX(sourceNode)},${getStartY(sourceNode)} L ${Math.round(getEndX(targetNode))}.0001,${Math.round(getEndY(targetNode))}.0001`;
     }
   };
   return (
@@ -62,8 +68,8 @@ export const Connections = ({
           const sourceNode = nodes.get(edge.source);
           const targetNode = nodes.get(edge.target);
           if (sourceNode && targetNode) {
-            const startColor = `${sourceNode.color}b0`;
-            const endColor = `${targetNode.color}b0`;
+            const startColor = `${sourceNode.color}`;
+            const endColor = `${targetNode.color}`;
 
             const hypotenuse = Math.sqrt(
               Math.pow(targetNode.position.x - sourceNode.position.x, 2) +
@@ -98,26 +104,36 @@ export const Connections = ({
                 </linearGradient>
                 <marker
                   id={edge.id + "-circle-start"}
-                  markerWidth="24"
-                  markerHeight="24"
-                  refX="-35"
-                  refY="12"
+                  markerWidth={HANDLEWIDTH}
+                  markerHeight={HANDLEWIDTH}
+                  refX="-28"
+                  refY={HANDLEWIDTH / 2}
                   orient="auto"
                   markerUnits="userSpaceOnUse"
                 >
-                  <circle cx="12" cy="12" r="11" fill={startColor} />
+                  <circle
+                    cx={HANDLEWIDTH / 2}
+                    cy={HANDLEWIDTH / 2}
+                    r={HANDLEWIDTH / 2}
+                    fill={startColor}
+                  />
                 </marker>
 
                 <marker
                   id={edge.id + "-circle-end"}
-                  markerWidth="24"
-                  markerHeight="24"
-                  refX="59"
-                  refY="12"
+                  markerWidth={HANDLEWIDTH}
+                  markerHeight={HANDLEWIDTH}
+                  refX="60"
+                  refY={HANDLEWIDTH / 2}
                   orient="auto"
                   markerUnits="userSpaceOnUse"
                 >
-                  <circle cx="12" cy="12" r="11" fill={endColor} />
+                  <circle
+                    cx={HANDLEWIDTH / 2}
+                    cy={HANDLEWIDTH / 2}
+                    r={HANDLEWIDTH / 2}
+                    fill={endColor}
+                  />
                 </marker>
               </defs>
             );

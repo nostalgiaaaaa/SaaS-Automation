@@ -1,11 +1,10 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { initialNodes, initialEdges } from "./data/nodes-edges";
-import { useDragStore } from "./store/drag";
+import { ELKOPTIONS, useDragStore } from "./store/drag";
 import { Node } from "./components/Node/Node";
 import { css } from "@styled-system/css";
 import { Connections } from "./components/Connections/Connections";
 import invariant from "tiny-invariant";
-import "./style/index.css";
 
 export const Drag = () => {
   const dragStore = useDragStore();
@@ -13,21 +12,17 @@ export const Drag = () => {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
 
-  const [direction, setDirection] = useState("LR");
+  const [direction, setDirection] = useState("RIGHT");
   const [top, setTop] = useState(0);
   const [left, setLeft] = useState(0);
   const [zoomLevel, setZoomLevel] = useState(1);
 
   useLayoutEffect(() => {
-    dragStore.getLayoutedElements(
-      initialNodes,
-      initialEdges,
-      direction as "TB" | "LR"
-    );
-
     invariant(dragContainerRef.current);
     setWidth(dragContainerRef.current.clientWidth);
     setHeight(dragContainerRef.current.clientHeight);
+
+    onLayout({ direction: direction, useInitialNodes: true });
 
     setTop(0);
     setLeft(0);
@@ -42,10 +37,28 @@ export const Drag = () => {
     }
   };
 
-  const handleDirection = (direction: "TB" | "LR") => {
-    setDirection(direction);
-    dragStore.getLayoutedElements(initialNodes, initialEdges, direction);
-  };
+  const onLayout = useCallback(
+    ({
+      direction,
+      useInitialNodes = false,
+    }: {
+      direction: string;
+      useInitialNodes?: boolean;
+    }) => {
+      setDirection(direction);
+
+      const opts = { "elk.direction": direction, ...ELKOPTIONS };
+      const ns = useInitialNodes
+        ? initialNodes
+        : Array.from(dragStore.nodes.values());
+      const es = useInitialNodes
+        ? initialEdges
+        : Array.from(dragStore.edges.values());
+
+      dragStore.getLayoutedElements(ns, es, opts);
+    },
+    [dragStore]
+  );
 
   const dragContainerStyle = css({
     width: "100vw",
@@ -57,8 +70,8 @@ export const Drag = () => {
 
   return (
     <>
-      <button onClick={() => handleDirection("LR")}>수평</button>
-      <button onClick={() => handleDirection("TB")}>수직</button>
+      <button onClick={() => onLayout({ direction: "DOWN" })}>수직</button>
+      <button onClick={() => onLayout({ direction: "RIGHT" })}>수평</button>
       <div
         ref={dragContainerRef}
         className={dragContainerStyle}
@@ -78,8 +91,12 @@ export const Drag = () => {
         {Array.from(dragStore.nodes.values()).map((node) => {
           return (
             <Node
-              node={node}
               dragContainerRef={dragContainerRef.current}
+              node={node}
+              hasChild={Array.from(dragStore.edges.values()).some(
+                (edge) => edge.source === node.id
+              )}
+              direction={direction}
               key={node.id}
             ></Node>
           );
