@@ -106,6 +106,7 @@ export const NodeStyle = sva({
       width: "100%",
       display: "flex",
       justifyContent: "center",
+      overflow: "visible",
     },
     label: {
       fontSize: "10px",

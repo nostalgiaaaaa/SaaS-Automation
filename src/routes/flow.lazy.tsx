@@ -140,11 +140,10 @@ function Drag() {
     width: "fit",
     minWidth: "300px",
     height: "100%",
-    background:
-      "radial-gradient(100.03% 140.18% at 0% 85.53%, #ff00ff 0%, #724ebf 95.31%)",
+    background: "linear-gradient(180deg, #b55dcd 0, #724ebf 100%)",
     right: "-300px",
-    borderTopLeftRadius: "12px",
-    borderBottomLeftRadius: "12px",
+    borderTopLeftRadius: "8px",
+    borderBottomLeftRadius: "8px",
     boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
     display: "flex",
     flexDirection: "column",
@@ -160,7 +159,9 @@ function Drag() {
   const panelTitleStyle = css({
     fontSize: "32px",
     color: "#fff",
-    fontWeight: "bold",
+    backgroundColor: "rgba(0, 0, 0, .2)",
+    borderRadius: "8px",
+    padding: "2px 10px",
   });
 
   const inputWrapStyle = css({
@@ -172,7 +173,7 @@ function Drag() {
   const labelStyle = css({
     color: "#fff",
     fontSize: "16px",
-    fontWeight: "bold",
+    width: "100px",
   });
 
   const inputStyle = css({
@@ -188,7 +189,7 @@ function Drag() {
     width: "400px",
     height: "650px",
     border: "5px #cfc7ff solid",
-    borderRadius: "16px",
+    borderRadius: "24px",
     top: "20%",
     left: "50%",
     boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
