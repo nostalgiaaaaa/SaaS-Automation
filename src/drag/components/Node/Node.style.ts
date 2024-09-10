@@ -114,6 +114,7 @@ export const NodeStyle = sva({
       backgroundColor: "#ffffffb5",
       padding: "0px 8px",
       fontWeight: "500",
+      whiteSpace: "nowrap",
     },
   },
 
