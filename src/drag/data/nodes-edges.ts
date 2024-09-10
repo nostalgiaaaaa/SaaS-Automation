@@ -3,6 +3,7 @@ import { edgeType, NodeData } from "../type";
 export const initialNodes: NodeData[] = [
   {
     id: "1",
+    title: "input",
     type: "1",
     color: "#9ee485",
     data: { label: "input" },
@@ -10,6 +11,7 @@ export const initialNodes: NodeData[] = [
   },
   {
     id: "2",
+    title: "node 2",
     type: "1",
     color: "#9ee485",
     data: { label: "node 2" },
@@ -17,6 +19,7 @@ export const initialNodes: NodeData[] = [
   },
   {
     id: "2a",
+    title: "node 2a",
     type: "2",
     color: "#f080ff",
     data: { label: "node 2a" },
@@ -24,6 +27,7 @@ export const initialNodes: NodeData[] = [
   },
   {
     id: "2b",
+    title: "node 2b",
     type: "3",
     color: "#8088ff",
     data: { label: "node 2b" },
@@ -31,6 +35,7 @@ export const initialNodes: NodeData[] = [
   },
   {
     id: "2c",
+    title: "node 2c",
     type: "4",
     color: "#ffca80",
     data: { label: "node 2c" },
@@ -38,6 +43,7 @@ export const initialNodes: NodeData[] = [
   },
   {
     id: "2d",
+    title: "node 2d",
     type: "1",
     color: "#9ee485",
     data: { label: "node 2d" },
@@ -45,6 +51,7 @@ export const initialNodes: NodeData[] = [
   },
   {
     id: "3",
+    title: "node 3",
     type: "1",
     color: "#9ee485",
     data: { label: "node 3" },
@@ -52,6 +59,7 @@ export const initialNodes: NodeData[] = [
   },
   {
     id: "4",
+    title: "node 4",
     type: "3",
     color: "#8088ff",
     data: { label: "node 4" },
@@ -59,6 +67,7 @@ export const initialNodes: NodeData[] = [
   },
   {
     id: "5",
+    title: "node 5",
     type: "2",
     color: "#f080ff",
     data: { label: "node 5" },
@@ -66,6 +75,7 @@ export const initialNodes: NodeData[] = [
   },
   {
     id: "6",
+    title: "output",
     type: "4",
     color: "#ffca80",
     data: { label: "output" },
@@ -73,6 +83,7 @@ export const initialNodes: NodeData[] = [
   },
   {
     id: "7",
+    title: "output",
     type: "1",
     color: "#9ee485",
     data: { label: "output" },
@@ -80,6 +91,7 @@ export const initialNodes: NodeData[] = [
   },
   {
     id: "9",
+    title: "output",
     type: "1",
     color: "#ffca80",
     data: { label: "output" },

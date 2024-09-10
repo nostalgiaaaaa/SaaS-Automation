@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { DragNode } from "../../type";
 import {
+  ELKOPTIONS,
   HANDLEWIDTH,
   NODEHEIGHT,
   NODEWIDTH,
@@ -42,8 +43,6 @@ export const Node = ({
 
   const start = (e: MouseEvent) => {
     if (e.button !== 0) return;
-
-    if (draggableRef.current) draggableRef.current.style.zIndex = "998";
     dragStore.selectNode(node.id);
     prevPosX = e.clientX;
     prevPosY = e.clientY;
@@ -66,7 +65,6 @@ export const Node = ({
   const end = (e: MouseEvent) => {
     if (e.button !== 0) return;
 
-    if (draggableRef.current) draggableRef.current.style.zIndex = "1";
     if (dragContainerRef)
       dragContainerRef.removeEventListener("mousemove", move, false);
     setMoving(false);
@@ -75,24 +73,41 @@ export const Node = ({
     console.log(press);
   };
 
+  const addNewNode = () => {
+    const newNode: DragNode = {
+      id: "",
+      title: "new Node",
+      type: "5",
+      color: "#b0b0b0",
+      position: { x: 0, y: 0 },
+      data: {},
+    };
+    dragStore.addNode(newNode, ELKOPTIONS, node.id);
+  };
+
+  const deleteNode = () => {
+    dragStore.deleteNode(node.id);
+  };
+
   const style = NodeStyle();
 
   const rootStyle: React.CSSProperties = {
     top: `${node.position.y}px`,
     left: `${node.position.x}px`,
+    zIndex: dragStore.selectedNode?.id === node.id ? "10" : "",
   };
 
   const nodeStyle: React.CSSProperties = {
     padding: `${OUTLINEWIDHT}px`,
   };
-
   const itemStyle: React.CSSProperties = {
     width: `${NODEWIDTH}px`,
     height: `${NODEHEIGHT}px`,
     backgroundColor: node.color,
-    outline: `0px solid ${node.color}B3`,
-    outlineWidth:
-      dragStore.selectedNode?.id === node.id ? `${OUTLINEWIDHT}px` : "",
+    outline:
+      dragStore.selectedNode?.id === node.id
+        ? `${OUTLINEWIDHT}px solid ${node.color}B3`
+        : `0px solid ${node.color}B3`,
   };
 
   const handleStyle: React.CSSProperties = {
@@ -106,20 +121,31 @@ export const Node = ({
   return (
     <div className={style.root} style={rootStyle}>
       {!hasChild && (
-        <div
+        <button
           className={
             direction === "RIGHT" ? style.handleRight : style.handleBottom
           }
           style={handleStyle}
+          onClick={() => addNewNode()}
         >
           <SvgIcon name="plus" size={10} fill={"#fff"} />
-        </div>
+        </button>
       )}
 
       <div className={style.node} style={nodeStyle}>
         <div ref={draggableRef} className={style.item} style={itemStyle}>
           <div className={style.content}> {getDesignerIcon("rest")}</div>
         </div>
+      </div>
+
+      <button className={style.deleteButton} onClick={() => deleteNode()}>
+        <SvgIcon name="close" size={12} fill={"#fff"} stroke={"#fff"} />
+      </button>
+
+      <div className={style.labelGroup}>
+        <span className={style.label}>
+          {node.data.label ? node.data.label : node.title}
+        </span>
       </div>
     </div>
   );

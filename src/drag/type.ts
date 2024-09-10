@@ -7,16 +7,15 @@ export interface Position {
 
 export interface NodeData {
   id: string;
+  title: string;
   type: string;
   color: string;
   position: Position;
-  data: unknown;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any;
 }
 
-export interface DragNode extends NodeData, ElkNode {
-  targetPosition: string;
-  sourcePosition: string;
-}
+export interface DragNode extends NodeData, ElkNode {}
 
 export interface Edge {
   id: string;
