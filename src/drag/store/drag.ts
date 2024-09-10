@@ -74,6 +74,7 @@ export type BoardContextValue = {
     options: LayoutOptions
   ) => void;
   setData: (key: string, value: string) => void;
+  clearAll: () => void;
 };
 
 export const useDragStore = create<BoardContextValue>((set, get) => ({
@@ -238,5 +239,15 @@ export const useDragStore = create<BoardContextValue>((set, get) => ({
         });
       })
       .catch(console.error);
+  },
+  clearAll: () => {
+    set(() => {
+      return {
+        nodes: new Map(),
+        edges: new Map(),
+        selectedNode: undefined,
+        selectedEdge: undefined,
+      };
+    });
   },
 }));

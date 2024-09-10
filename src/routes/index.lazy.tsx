@@ -23,6 +23,7 @@ function Drag() {
   const [zoomLevel, setZoomLevel] = useState(1);
 
   useLayoutEffect(() => {
+    dragStore.clearAll();
     invariant(dragContainerRef.current);
     setWidth(dragContainerRef.current.clientWidth);
     setHeight(dragContainerRef.current.clientHeight);

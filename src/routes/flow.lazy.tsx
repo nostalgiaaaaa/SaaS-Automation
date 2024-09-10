@@ -27,6 +27,7 @@ function Drag() {
   ]);
 
   useLayoutEffect(() => {
+    dragStore.clearAll();
     invariant(dragContainerRef.current);
     setWidth(dragContainerRef.current.clientWidth);
     setHeight(dragContainerRef.current.clientHeight);
