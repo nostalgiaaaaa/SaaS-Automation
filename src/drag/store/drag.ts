@@ -59,6 +59,12 @@ export type BoardContextValue = {
   selectedNode: DragNode | undefined;
   selectedEdge: Edge | undefined;
 
+  getLayoutedElements: (
+    nodes: NodeData[],
+    edges: Edge[],
+    options: LayoutOptions
+  ) => void;
+  clearAll: () => void;
   addNode: (
     node: NodeData,
     options: LayoutOptions,
@@ -68,13 +74,17 @@ export type BoardContextValue = {
   deleteNode: (nodeId: string) => void;
   selectNode: (id: string) => void;
   updatePosition: (pos: Position) => void;
-  getLayoutedElements: (
-    nodes: NodeData[],
-    edges: Edge[],
-    options: LayoutOptions
-  ) => void;
   setData: (key: string, value: string) => void;
-  clearAll: () => void;
+
+  width: number;
+  height: number;
+  boardX: number;
+  boardY: number;
+  scale: number;
+  setWidth: (value: number) => void;
+  setHeight: (value: number) => void;
+  updateBoardPosition: (pos: Position) => void;
+  updateBoardScale: (value: number) => void;
 };
 
 export const useDragStore = create<BoardContextValue>((set, get) => ({
@@ -83,6 +93,62 @@ export const useDragStore = create<BoardContextValue>((set, get) => ({
   selectedNode: undefined,
   selectedEdge: undefined,
 
+  getLayoutedElements: async (nodes, edges, options = {}) => {
+    const graph: ElkNode = {
+      id: "root",
+      layoutOptions: options,
+      children: nodes.map((node) => ({
+        ...node,
+        width: NODEWIDTH,
+        height: NODEHEIGHT,
+      })),
+      edges: edges as unknown as ElkExtendedEdge[],
+    };
+
+    const elk = new ELK();
+
+    await elk
+      .layout(graph)
+      .then((layoutedGraph: ElkNode) => {
+        const nodeMap = new Map<string, DragNode>();
+        const edgeMap = new Map<string, Edge>();
+        layoutedGraph.children?.forEach((node: ElkNode) => {
+          const newNode = {
+            ...node,
+            position: { x: node.x! - get().boardX, y: node.y! - get().boardY },
+          } as DragNode;
+          nodeMap.set(newNode.id, newNode);
+        });
+
+        layoutedGraph.edges?.forEach((edge) => {
+          edgeMap.set(edge.id, edge as unknown as Edge);
+        });
+
+        set(() => {
+          return {
+            selectedNode: undefined,
+            nodes: nodeMap,
+            edges: edgeMap,
+          };
+        });
+      })
+      .catch(console.error);
+  },
+  clearAll: () => {
+    set(() => {
+      return {
+        nodes: new Map(),
+        edges: new Map(),
+        selectedNode: undefined,
+        selectedEdge: undefined,
+        width: 0,
+        height: 0,
+        boardX: 0,
+        boardY: 0,
+        scale: 1,
+      };
+    });
+  },
   addNode: async (
     node: NodeData,
     options = {},
@@ -132,7 +198,7 @@ export const useDragStore = create<BoardContextValue>((set, get) => ({
         layoutedGraph.children?.forEach((node: ElkNode) => {
           const newNode = {
             ...node,
-            position: { x: node.x!, y: node.y! },
+            position: { x: node.x! - get().boardX, y: node.y! - get().boardY },
           } as DragNode;
           nodeMap.set(newNode.id, newNode);
         });
@@ -174,18 +240,6 @@ export const useDragStore = create<BoardContextValue>((set, get) => ({
       return { selectedNode: selected };
     });
   },
-
-  setData: (key, value) => {
-    set((state) => {
-      if (state.selectedNode) {
-        state.selectedNode.data[key] = value;
-        return {
-          selectedNode: state.selectedNode,
-        };
-      } else return {};
-    });
-  },
-
   updatePosition: (pos: Position) => {
     set((state) => {
       const temp = state.selectedNode;
@@ -198,55 +252,52 @@ export const useDragStore = create<BoardContextValue>((set, get) => ({
       };
     });
   },
-
-  getLayoutedElements: async (nodes, edges, options = {}) => {
-    const graph: ElkNode = {
-      id: "root",
-      layoutOptions: options,
-      children: nodes.map((node) => ({
-        ...node,
-        width: NODEWIDTH,
-        height: NODEHEIGHT,
-      })),
-      edges: edges as unknown as ElkExtendedEdge[],
-    };
-
-    const elk = new ELK();
-
-    await elk
-      .layout(graph)
-      .then((layoutedGraph: ElkNode) => {
-        const nodeMap = new Map<string, DragNode>();
-        const edgeMap = new Map<string, Edge>();
-        layoutedGraph.children?.forEach((node: ElkNode) => {
-          const newNode = {
-            ...node,
-            position: { x: node.x!, y: node.y! },
-          } as DragNode;
-          nodeMap.set(newNode.id, newNode);
-        });
-
-        layoutedGraph.edges?.forEach((edge) => {
-          edgeMap.set(edge.id, edge as unknown as Edge);
-        });
-
-        set(() => {
-          return {
-            selectedNode: undefined,
-            nodes: nodeMap,
-            edges: edgeMap,
-          };
-        });
-      })
-      .catch(console.error);
+  setData: (key, value) => {
+    set((state) => {
+      if (state.selectedNode) {
+        state.selectedNode.data[key] = value;
+        return {
+          selectedNode: state.selectedNode,
+        };
+      } else return {};
+    });
   },
-  clearAll: () => {
+
+  width: 0,
+  height: 0,
+  boardX: 0,
+  boardY: 0,
+  scale: 1,
+  setWidth: (value) => {
     set(() => {
       return {
-        nodes: new Map(),
-        edges: new Map(),
-        selectedNode: undefined,
-        selectedEdge: undefined,
+        width: value,
+      };
+    });
+  },
+  setHeight: (value) => {
+    set(() => {
+      return {
+        height: value,
+      };
+    });
+  },
+  updateBoardPosition: (pos) => {
+    set((state) => {
+      // if (state.boardX - pos.x > 0 || state.boardX - pos.x < -state.width / 2)
+      //   pos.x = 0;
+      // if (state.boardY - pos.y > 0 || state.boardY - pos.y < -state.height / 2)
+      //   pos.y = 0;
+      return {
+        boardX: state.boardX - pos.x,
+        boardY: state.boardY - pos.y,
+      };
+    });
+  },
+  updateBoardScale: (value: number) => {
+    set(() => {
+      return {
+        scale: value,
       };
     });
   },

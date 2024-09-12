@@ -34,11 +34,14 @@ export const Route = createRootRoute({
     return (
       <>
         <div className={menuStyle}>
-          <Link to="/" className={toggleStyle}>
+          <Link to='/' className={toggleStyle}>
             Home
-          </Link>{" "}
-          <Link to="/flow" className={toggleStyle}>
+          </Link>
+          <Link to='/flow' className={toggleStyle}>
             About
+          </Link>
+          <Link to='/slack' className={toggleStyle}>
+            Slack
           </Link>
         </div>
         <div className={blackStyle}></div>

@@ -5,14 +5,14 @@ import { css } from "@styled-system/css";
 import { Connections } from "../drag/components/Connections/Connections";
 import invariant from "tiny-invariant";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { flowEdges, flowNodes } from "@/drag/data/flowData";
+import { flowEdges, flowNodes } from "@/drag/data/slackData";
 import { DragNode } from "@/drag/type";
 
-export const Route = createLazyFileRoute("/flow")({
-  component: Flow,
+export const Route = createLazyFileRoute("/slack")({
+  component: Slack,
 });
 
-function Flow() {
+function Slack() {
   const dragStore = useDragStore();
   const dragContainerRef = useRef<HTMLDivElement | null>(null);
   const dragBoardRef = useRef<HTMLDivElement | null>(null);
@@ -22,7 +22,6 @@ function Flow() {
   const [chatList, setChatList] = useState([
     { from: "bot", message: "안녕하세요." },
   ]);
-
   useLayoutEffect(() => {
     dragStore.clearAll();
     invariant(dragBoardRef.current);
@@ -45,7 +44,7 @@ function Flow() {
     setTimeout(() => {
       setChatList((oldArray) => [
         ...oldArray,
-        { from: "bot", message: "성함이 어떻게 되시나요?" },
+        { from: "bot", message: "팀명이 무엇인가요?" },
       ]);
     }, 1500);
   }, []);
@@ -75,7 +74,7 @@ function Flow() {
       const returnAction = (node: DragNode, value: string) => {
         let result = node.data.action(value);
         const sourceEdges = edgeList.filter((edge) => edge.source === node.id);
-        if (node.title !== "Match Message") {
+        if (node.title !== "Filter") {
           sourceEdges.forEach((edge) => {
             const target = nodeList.find((node) => node.id === edge.target);
             if (target) result = returnAction(target, result);
@@ -95,6 +94,7 @@ function Flow() {
       const input = nodeList.find((node) => node.type === "input");
       if (input) {
         const result = returnAction(input, text);
+        console.log(result);
         if (result)
           setTimeout(() => {
             setChatList((oldArray) => [...oldArray, result]);

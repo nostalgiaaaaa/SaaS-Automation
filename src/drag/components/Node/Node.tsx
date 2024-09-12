@@ -14,12 +14,12 @@ import { getDesignerIcon } from "@/drag/data/KaravanIcons";
 import { SvgIcon } from "../SvgIcon";
 
 export const Node = ({
-  dragContainerRef,
+  dragBoardRef,
   node,
   hasChild,
   direction,
 }: {
-  dragContainerRef: HTMLDivElement | null;
+  dragBoardRef: HTMLDivElement | null;
   node: DragNode;
   hasChild: boolean;
   direction: string;
@@ -49,8 +49,7 @@ export const Node = ({
 
     setPress(true);
 
-    if (dragContainerRef)
-      dragContainerRef.addEventListener("mousemove", move, false);
+    if (dragBoardRef) dragBoardRef.addEventListener("mousemove", move, false);
   };
   const move = (e: MouseEvent) => {
     setMoving(true);
@@ -65,8 +64,8 @@ export const Node = ({
   const end = (e: MouseEvent) => {
     if (e.button !== 0) return;
 
-    if (dragContainerRef)
-      dragContainerRef.removeEventListener("mousemove", move, false);
+    if (dragBoardRef)
+      dragBoardRef.removeEventListener("mousemove", move, false);
     setMoving(false);
     setPress(false);
     console.log(moving);
@@ -128,18 +127,34 @@ export const Node = ({
           style={handleStyle}
           onClick={() => addNewNode()}
         >
-          <SvgIcon name="plus" size={10} fill={"#fff"} />
+          <SvgIcon name='plus' size={10} fill={"#fff"} />
         </button>
       )}
 
       <div className={style.node} style={nodeStyle}>
         <div ref={draggableRef} className={style.item} style={itemStyle}>
-          <div className={style.content}> {getDesignerIcon("rest")}</div>
+          <div className={style.content}>
+            {node.title.includes("Slack") && (
+              <a href='https://svgshare.com/s/4V0'>
+                <img
+                  src='https://upload.wikimedia.org/wikipedia/commons/d/d5/Slack_icon_2019.svg'
+                  title='avatar'
+                />
+              </a>
+            )}
+            {node.title.includes("Filter") && getDesignerIcon("filter")}
+            {node.title.includes("Chat") && getDesignerIcon("chat")}
+            {node.title === "Message" && getDesignerIcon("message")}
+            {!node.title.includes("Slack") &&
+              !node.title.includes("Filter") &&
+              !node.title.includes("Chat") &&
+              getDesignerIcon("rest")}
+          </div>
         </div>
       </div>
 
       <button className={style.deleteButton} onClick={() => deleteNode()}>
-        <SvgIcon name="close" size={12} fill={"#fff"} stroke={"#fff"} />
+        <SvgIcon name='close' size={12} fill={"#fff"} stroke={"#fff"} />
       </button>
 
       <div className={style.labelGroup}>

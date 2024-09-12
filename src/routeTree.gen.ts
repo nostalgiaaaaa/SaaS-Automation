@@ -16,10 +16,16 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
+const SlackLazyImport = createFileRoute('/slack')()
 const FlowLazyImport = createFileRoute('/flow')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
+
+const SlackLazyRoute = SlackLazyImport.update({
+  path: '/slack',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/slack.lazy').then((d) => d.Route))
 
 const FlowLazyRoute = FlowLazyImport.update({
   path: '/flow',
@@ -49,6 +55,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FlowLazyImport
       parentRoute: typeof rootRoute
     }
+    '/slack': {
+      id: '/slack'
+      path: '/slack'
+      fullPath: '/slack'
+      preLoaderRoute: typeof SlackLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -57,36 +70,41 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/flow': typeof FlowLazyRoute
+  '/slack': typeof SlackLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/flow': typeof FlowLazyRoute
+  '/slack': typeof SlackLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/flow': typeof FlowLazyRoute
+  '/slack': typeof SlackLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/flow'
+  fullPaths: '/' | '/flow' | '/slack'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/flow'
-  id: '__root__' | '/' | '/flow'
+  to: '/' | '/flow' | '/slack'
+  id: '__root__' | '/' | '/flow' | '/slack'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   FlowLazyRoute: typeof FlowLazyRoute
+  SlackLazyRoute: typeof SlackLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   FlowLazyRoute: FlowLazyRoute,
+  SlackLazyRoute: SlackLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -102,7 +120,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/flow"
+        "/flow",
+        "/slack"
       ]
     },
     "/": {
@@ -110,6 +129,9 @@ export const routeTree = rootRoute
     },
     "/flow": {
       "filePath": "flow.lazy.tsx"
+    },
+    "/slack": {
+      "filePath": "slack.lazy.tsx"
     }
   }
 }

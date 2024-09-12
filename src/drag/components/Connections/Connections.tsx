@@ -10,7 +10,6 @@ import "./index.css";
 export const Connections = ({
   nodes,
   edges,
-  zoomLevel,
   width,
   height,
   top,
@@ -19,7 +18,6 @@ export const Connections = ({
 }: {
   nodes: Map<string, DragNode>;
   edges: Map<string, Edge>;
-  zoomLevel: number;
   width: number;
   height: number;
   top: number;
@@ -29,30 +27,30 @@ export const Connections = ({
   const centerX = (NODEWIDTH + OUTLINEWIDHT * 2) / 2;
   const centerY = (NODEHEIGHT + OUTLINEWIDHT * 2) / 2;
   const getStartX = (sourceNode: DragNode) => {
-    return (sourceNode.position.x + centerX - left) / zoomLevel;
+    return sourceNode.position.x + centerX - left;
   };
 
   const getStartY = (sourceNode: DragNode) => {
-    return (sourceNode.position.y + centerY - top) / zoomLevel;
+    return sourceNode.position.y + centerY - top;
   };
 
   const getEndX = (targetNode: DragNode) => {
-    return (targetNode.position.x + centerX - left) / zoomLevel;
+    return targetNode.position.x + centerX - left;
   };
 
   const getEndY = (targetNode: DragNode) => {
-    return (targetNode.position.y + centerY - top) / zoomLevel;
+    return targetNode.position.y + centerY - top;
   };
 
   const getPathD = (sourceNode: DragNode, targetNode: DragNode) => {
     if (direction === "RIGHT") {
-      return `M ${getStartX(sourceNode)},${getStartY(sourceNode)} L ${Math.round(getEndX(targetNode))}.0001,${Math.round(getEndY(targetNode))}.0001`;
+      return `M ${getStartX(sourceNode)},${getStartY(sourceNode)} L ${Math.round(getEndX(targetNode))}.001,${Math.round(getEndY(targetNode))}.001`;
     } else {
-      return `M ${getStartX(sourceNode)},${getStartY(sourceNode)} L ${Math.round(getEndX(targetNode))}.0001,${Math.round(getEndY(targetNode))}.0001`;
+      return `M ${getStartX(sourceNode)},${getStartY(sourceNode)} L ${Math.round(getEndX(targetNode))}.001,${Math.round(getEndY(targetNode))}.001`;
     }
   };
   return (
-    <div className="connections" style={{ width: width, height: height }}>
+    <div className='connections' style={{ width: width, height: height }}>
       <svg
         style={{
           width: width,
@@ -94,11 +92,11 @@ export const Connections = ({
                   y2={y2}
                 >
                   <stop
-                    offset="0%"
+                    offset='0%'
                     style={{ stopColor: startColor, stopOpacity: 1 }}
                   />
                   <stop
-                    offset="100%"
+                    offset='100%'
                     style={{ stopColor: endColor, stopOpacity: 1 }}
                   />
                 </linearGradient>
@@ -106,10 +104,10 @@ export const Connections = ({
                   id={edge.id + "-circle-start"}
                   markerWidth={HANDLEWIDTH}
                   markerHeight={HANDLEWIDTH}
-                  refX="-28"
+                  refX='-28'
                   refY={HANDLEWIDTH / 2}
-                  orient="auto"
-                  markerUnits="userSpaceOnUse"
+                  orient='auto'
+                  markerUnits='userSpaceOnUse'
                 >
                   <circle
                     cx={HANDLEWIDTH / 2}
@@ -123,10 +121,10 @@ export const Connections = ({
                   id={edge.id + "-circle-end"}
                   markerWidth={HANDLEWIDTH}
                   markerHeight={HANDLEWIDTH}
-                  refX="60"
+                  refX='60'
                   refY={HANDLEWIDTH / 2}
-                  orient="auto"
-                  markerUnits="userSpaceOnUse"
+                  orient='auto'
+                  markerUnits='userSpaceOnUse'
                 >
                   <circle
                     cx={HANDLEWIDTH / 2}
@@ -149,7 +147,7 @@ export const Connections = ({
                 <path
                   d={getPathD(sourceNode, targetNode)}
                   key={edge.id + "-incoming"}
-                  className="path-incoming"
+                  className='path-incoming'
                   stroke={`url(#${edge.id}-grad)`}
                   markerStart={`url(#${edge.id}-circle-start)`}
                   markerEnd={`url(#${edge.id}-circle-end)`}

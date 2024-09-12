@@ -14,25 +14,25 @@ export const Route = createLazyFileRoute("/")({
 function Drag() {
   const dragStore = useDragStore();
   const dragContainerRef = useRef<HTMLDivElement | null>(null);
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
+  const dragBoardRef = useRef<HTMLDivElement | null>(null);
 
   const [direction, setDirection] = useState("RIGHT");
-  const [top, setTop] = useState(0);
-  const [left, setLeft] = useState(0);
-  const [zoomLevel, setZoomLevel] = useState(1);
 
   useLayoutEffect(() => {
     dragStore.clearAll();
-    invariant(dragContainerRef.current);
-    setWidth(dragContainerRef.current.clientWidth);
-    setHeight(dragContainerRef.current.clientHeight);
+    invariant(dragBoardRef.current);
+    const width = dragBoardRef.current.clientWidth;
+    const height = dragBoardRef.current.clientHeight;
+    dragStore.setWidth(width);
+    dragStore.setHeight(height);
+    dragStore.updateBoardScale(1);
+    dragStore.updateBoardPosition({
+      x: (width * 3) / 8,
+      y: (height * 3) / 8,
+    });
+    draggable(dragBoardRef.current);
 
     onLayout({ direction: direction, useInitialNodes: true });
-
-    setTop(0);
-    setLeft(0);
-    setZoomLevel(1);
   }, []);
 
   const selectNone = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -66,13 +66,80 @@ function Drag() {
     [dragStore]
   );
 
+  const draggable = (element: HTMLDivElement) => {
+    element.onmousedown = start;
+    element.onmouseup = end;
+  };
+
+  let prevPosX = 0;
+  let prevPosY = 0;
+  const start = (e: MouseEvent) => {
+    if (e.button !== 0) return;
+    if ((e.target as HTMLDivElement).dataset.click !== "FLOWS") return;
+    prevPosX = e.clientX;
+    prevPosY = e.clientY;
+
+    if (dragContainerRef.current) {
+      dragContainerRef.current.addEventListener("mousemove", move, false);
+      dragContainerRef.current.addEventListener("mouseout", end, false);
+    }
+  };
+  const move = (e: MouseEvent) => {
+    const posX = prevPosX - e.clientX;
+    const posY = prevPosY - e.clientY;
+    prevPosX = e.clientX;
+    prevPosY = e.clientY;
+
+    dragStore.updateBoardPosition({ x: posX, y: posY });
+  };
+
+  const end = (e: MouseEvent) => {
+    if (e.button !== 0) return;
+
+    if (dragContainerRef.current) {
+      dragContainerRef.current.removeEventListener("mousemove", move, false);
+      dragContainerRef.current.removeEventListener("mouseout", end, false);
+    }
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const zoomIn = (e: any) => {
+    const delta = e.deltaY > 0 ? 0.1 : -0.1;
+    const newScale = dragStore.scale + delta;
+    // const ratio = 1 - newScale / dragStore.scale;
+    if (newScale < 0.5 || newScale > 3) return;
+
+    const xOrg = e.clientX / dragStore.scale;
+    const yOrg = e.clientY / dragStore.scale;
+    const xNew = xOrg * newScale;
+    const yNew = yOrg * newScale;
+    const xDiff = e.clientX - xNew;
+    const yDiff = e.clientY - yNew;
+
+    dragStore.updateBoardPosition({
+      x: xDiff,
+      y: yDiff,
+    });
+
+    dragStore.updateBoardScale(newScale);
+  };
+
   const dragContainerStyle = css({
     width: "100vw",
     height: "calc(100vh - 35px)",
-    backgroundColor: "#efefef",
     position: "relative",
     overflow: "hidden",
   });
+
+  const dragBoardStyle = css({
+    width: "400%",
+    height: "400%",
+    position: "absolute",
+    backgroundColor: "#efefef",
+  });
+  const boardPositionStyle: React.CSSProperties = {
+    transform: `translate(${dragStore.boardX}px, ${dragStore.boardY}px) scale(${dragStore.scale})`,
+  };
 
   const buttonGroupstyle = css({
     position: "absolute",
@@ -94,35 +161,38 @@ function Drag() {
     });
 
   return (
-    <div
-      ref={dragContainerRef}
-      className={dragContainerStyle}
-      onClick={selectNone}
-      data-click="FLOWS"
-    >
-      <Connections
-        nodes={dragStore.nodes}
-        edges={dragStore.edges}
-        zoomLevel={zoomLevel}
-        width={width}
-        height={height}
-        top={top}
-        left={left}
-        direction={direction}
-      ></Connections>
-      {Array.from(dragStore.nodes.values()).map((node) => {
-        return (
-          <Node
-            dragContainerRef={dragContainerRef.current}
-            node={node}
-            hasChild={Array.from(dragStore.edges.values()).some(
-              (edge) => edge.source === node.id
-            )}
-            direction={direction}
-            key={node.id}
-          ></Node>
-        );
-      })}
+    <div ref={dragContainerRef} className={dragContainerStyle}>
+      <div
+        ref={dragBoardRef}
+        className={dragBoardStyle}
+        style={boardPositionStyle}
+        onClick={selectNone}
+        data-click='FLOWS'
+        // onWheel={zoomIn}
+      >
+        <Connections
+          nodes={dragStore.nodes}
+          edges={dragStore.edges}
+          width={dragStore.width}
+          height={dragStore.height}
+          top={dragStore.boardY}
+          left={dragStore.boardX}
+          direction={direction}
+        ></Connections>
+        {Array.from(dragStore.nodes.values()).map((node) => {
+          return (
+            <Node
+              dragBoardRef={dragBoardRef.current}
+              node={node}
+              hasChild={Array.from(dragStore.edges.values()).some(
+                (edge) => edge.source === node.id
+              )}
+              direction={direction}
+              key={node.id}
+            ></Node>
+          );
+        })}
+      </div>
       <div className={buttonGroupstyle}>
         <button
           className={buttonstyle("RIGHT")}
