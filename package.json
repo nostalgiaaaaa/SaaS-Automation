@@ -7,10 +7,9 @@
     "prepare": "panda preapre",
     "codegen": "panda codegen",
     "dev": "vite",
+    "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "start": "env-cmd -f .env.development react-scripts start",
-    "build": "env-cmd -f .env.production react-scripts build"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@tanstack/react-router": "^1.56.5",
