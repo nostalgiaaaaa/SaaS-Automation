@@ -81,17 +81,20 @@ function Drag() {
             (node) => String(result) === node.data?.triggerValue
           );
           if (target) result = returnAction(target, result);
+          else return;
         }
         return result;
       };
+
       const nodeList = Array.from(dragStore.nodes.values());
       const edgeList = Array.from(dragStore.edges.values());
       const input = nodeList.find((node) => node.type === "input");
       if (input) {
         const result = returnAction(input, text);
-        setTimeout(() => {
-          setChatList((oldArray) => [...oldArray, result]);
-        }, 1500);
+        if (result)
+          setTimeout(() => {
+            setChatList((oldArray) => [...oldArray, result]);
+          }, 1500);
       }
     },
     [dragStore.edges, dragStore.nodes]
@@ -130,8 +133,8 @@ function Drag() {
 
   const dragContainerStyle = css({
     width: "100vw",
-    height: "calc(100vh - 25px)",
-    backgroundColor: "#fff",
+    height: "calc(100vh - 35px)",
+    backgroundColor: "#efefef",
     position: "relative",
     overflow: "hidden",
   });
@@ -150,7 +153,7 @@ function Drag() {
     flexDirection: "column",
     gap: "12px",
     padding: "24px",
-    transition: "right 0.1s ease-in-out",
+    transition: "right 0.2s ease-in-out",
   });
 
   const slidePanelStyle: React.CSSProperties = {
@@ -197,7 +200,7 @@ function Drag() {
     backgroundImage:
       'url("https://64.media.tumblr.com/913fc95846350c30232a5608a322b78e/tumblr_obykzyjxZt1vbllj8o4_1280.png")',
     backgroundSize: "cover",
-    transition: "top 0.1s ease-in-out",
+    transition: "top 0.2s ease-in-out",
 
     display: "flex",
     flexDirection: "column",
@@ -254,7 +257,6 @@ function Drag() {
     padding: "4px 10px",
     backgroundColor: "#fff",
     border: "1px solid #d9d9d9",
-    transition: "all 0.2s",
     display: "inline-block",
     textOverflow: "ellipsis",
     borderLeftRadius: "8px",

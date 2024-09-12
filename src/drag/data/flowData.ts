@@ -20,9 +20,12 @@ const matchMessage = {
   data: {
     label: "",
     filter: "김형창",
+    success: "",
+    fail: "",
     action: (message: string) => {
-      if (message.includes(matchMessage.data.filter)) return true;
-      else return false;
+      if (message.includes(matchMessage.data.filter))
+        return matchMessage.data.success;
+      else return matchMessage.data.fail;
     },
   },
   position: { x: 0, y: 0 },

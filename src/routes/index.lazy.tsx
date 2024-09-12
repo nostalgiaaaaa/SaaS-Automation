@@ -68,8 +68,8 @@ function Drag() {
 
   const dragContainerStyle = css({
     width: "100vw",
-    height: "calc(100vh - 25px)",
-    backgroundColor: "#fff",
+    height: "calc(100vh - 35px)",
+    backgroundColor: "#efefef",
     position: "relative",
     overflow: "hidden",
   });
@@ -100,20 +100,6 @@ function Drag() {
       onClick={selectNone}
       data-click="FLOWS"
     >
-      <div className={buttonGroupstyle}>
-        <button
-          className={buttonstyle("RIGHT")}
-          onClick={() => onLayout({ direction: "RIGHT" })}
-        >
-          Horizontal
-        </button>
-        <button
-          className={buttonstyle("DOWN")}
-          onClick={() => onLayout({ direction: "DOWN" })}
-        >
-          Vertical
-        </button>
-      </div>
       <Connections
         nodes={dragStore.nodes}
         edges={dragStore.edges}
@@ -137,6 +123,20 @@ function Drag() {
           ></Node>
         );
       })}
+      <div className={buttonGroupstyle}>
+        <button
+          className={buttonstyle("RIGHT")}
+          onClick={() => onLayout({ direction: "RIGHT" })}
+        >
+          Horizontal
+        </button>
+        <button
+          className={buttonstyle("DOWN")}
+          onClick={() => onLayout({ direction: "DOWN" })}
+        >
+          Vertical
+        </button>
+      </div>
     </div>
   );
 }
