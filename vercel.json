@@ -2,7 +2,8 @@
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
   "headers": [
     {
-      "source": "/api/(.*)",
+      "source": "/api/:path*",
+      "destination": "https://slack.com/api/:path*",
       "headers": [
         { "key": "Access-Control-Allow-Credentials", "value": "true" },
         { "key": "Access-Control-Allow-Origin", "value": "*" },
