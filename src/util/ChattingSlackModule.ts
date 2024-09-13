@@ -29,7 +29,7 @@ export class ChattingSlackModule {
   static async sendStartMsg(conts: string) {
     const result = await axios({
       method: "post",
-      url: SLACK_URL + "/chat.postMessage",
+      // url: SLACK_URL + "/chat.postMessage",
       data: {
         text: conts,
         channel: "C07GDHUJR6D",
