@@ -172,26 +172,26 @@ function Slack() {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const zoomIn = (e: any) => {
-    const delta = e.deltaY > 0 ? 0.1 : -0.1;
-    const newScale = dragStore.scale + delta;
-    // const ratio = 1 - newScale / dragStore.scale;
-    if (newScale < 0.5 || newScale > 3) return;
+  // const zoomIn = (e: any) => {
+  //   const delta = e.deltaY > 0 ? 0.1 : -0.1;
+  //   const newScale = dragStore.scale + delta;
+  //   // const ratio = 1 - newScale / dragStore.scale;
+  //   if (newScale < 0.5 || newScale > 3) return;
 
-    const xOrg = e.clientX / dragStore.scale;
-    const yOrg = e.clientY / dragStore.scale;
-    const xNew = xOrg * newScale;
-    const yNew = yOrg * newScale;
-    const xDiff = e.clientX - xNew;
-    const yDiff = e.clientY - yNew;
+  //   const xOrg = e.clientX / dragStore.scale;
+  //   const yOrg = e.clientY / dragStore.scale;
+  //   const xNew = xOrg * newScale;
+  //   const yNew = yOrg * newScale;
+  //   const xDiff = e.clientX - xNew;
+  //   const yDiff = e.clientY - yNew;
 
-    dragStore.updateBoardPosition({
-      x: xDiff,
-      y: yDiff,
-    });
+  //   dragStore.updateBoardPosition({
+  //     x: xDiff,
+  //     y: yDiff,
+  //   });
 
-    dragStore.updateBoardScale(newScale);
-  };
+  //   dragStore.updateBoardScale(newScale);
+  // };
 
   const dragContainerStyle = css({
     width: "100vw",
