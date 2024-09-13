@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // const SLACK_URL = 'https://cors-anywhere.herokuapp.com/https://slack.com/api';
-const SLACK_URL = "https://thingproxy.freeboard.io/fetch/https://slack.com/api";
+const SLACK_URL = "https://slack.com/api";
 // const SLACK_URL = 'https://cors.sh/https://slack.com/api';
 // const SLACK_URL = 'https://cors.bridged.cc/https://slack.com/api';
 const SLACK_CHANNEL_ID = "C07GDHUJR6D";
