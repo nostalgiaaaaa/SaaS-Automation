@@ -1,7 +1,5 @@
 {
-  "rewrites": [
-    { "source": "/api/:path*", "destination": "https://slack.com/api/:path*" }
-  ],
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
   "headers": [
     {
       "source": "/api/(.*)",

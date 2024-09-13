@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // const SLACK_URL = 'https://cors-anywhere.herokuapp.com/https://slack.com/api';
-const SLACK_URL = "https://slack.com/api";
+const SLACK_URL = "https://thingproxy.freeboard.io/fetch/https://slack.com/api";
 // const SLACK_URL = 'https://cors.sh/https://slack.com/api';
 // const SLACK_URL = 'https://cors.bridged.cc/https://slack.com/api';
 const SLACK_CHANNEL_ID = "C07GDHUJR6D";
@@ -29,7 +29,7 @@ export class ChattingSlackModule {
   static async sendStartMsg(conts: string) {
     const result = await axios({
       method: "post",
-      url: "/chat.postMessage",
+      url: SLACK_URL + "/chat.postMessage",
       data: {
         text: conts,
         channel: "C07GDHUJR6D",
